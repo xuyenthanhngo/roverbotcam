@@ -270,115 +270,79 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
           mmal_buffer_header_mem_lock(buffer);
 
-     //
-    // *** PR : OPEN CV Stuff here !
-    //
-    int w=pData->pstate->width;    // get image size
-    int h=pData->pstate->height;
-    int h4=h/4;
+		 //
+		// *** PR : OPEN CV Stuff here !
+		//
+		int w=pData->pstate->width;    // get image size
+		int h=pData->pstate->height;
+		int h4=h/4;
 
-    memcpy(py->imageData,buffer->data,w*h);    // read Y
+		memcpy(py->imageData,buffer->data,w*h);    // read Y
 
-    if (pData->pstate->graymode==0)
-    {
-    memcpy(pu->imageData,buffer->data+w*h,w*h4); // read U
-    memcpy(pv->imageData,buffer->data+w*h+w*h4,w*h4); // read v
+		if (pData->pstate->graymode==0)
+		{
+			memcpy(pu->imageData,buffer->data+w*h,w*h4); // read U
+			memcpy(pv->imageData,buffer->data+w*h+w*h4,w*h4); // read v
 
-    cvResize(pu, pu_big, CV_INTER_NN);
-    cvResize(pv, pv_big, CV_INTER_NN);  //CV_INTER_LINEAR looks better but it's slower
-    cvMerge(py, pu_big, pv_big, NULL, image);
+			cvResize(pu, pu_big, CV_INTER_NN);
+			cvResize(pv, pv_big, CV_INTER_NN);  //CV_INTER_LINEAR looks better but it's slower
+			cvMerge(py, pu_big, pv_big, NULL, image);
 
-    cvCvtColor(image,dstImage,CV_YCrCb2RGB);    // convert in RGB color space (slow)
-    gray=cvarrToMat(dstImage);
-    //cvShowImage("camcvWin", dstImage );
-	//cvWaitKey(1);
+			cvCvtColor(image,dstImage,CV_YCrCb2RGB);    // convert in RGB color space (slow)
+			gray=cvarrToMat(dstImage);
+			//cvShowImage("camcvWin", dstImage );
+			//cvWaitKey(1);
 
-    }
-    else
-    {
-    // for face reco, we just keep gray channel, py
-    gray=cvarrToMat(py);
-    //cvShowImage("camcvWin", py); // display only gray channel
-	//cvWaitKey(1);
-    }
+		}
+		else
+		{
+			// for face reco, we just keep gray channel, py
+			gray=cvarrToMat(py);
+			//cvShowImage("camcvWin", py); // display only gray channel
+			//cvWaitKey(1);
+		}
 
-////////////////////////////////
-// FACE RECOGNITION START HERE
-////////////////////////////////
+		////////////////////////////////
+		// FACE RECOGNITION START HERE
+		////////////////////////////////
 
-        face_cascade.detectMultiScale(gray, faces, 1.1, 3, CV_HAAR_SCALE_IMAGE, Size(80,80));
-        uint visitorCount = faces.size(); // number of visitors found
-        if (currentVisitors != visitorCount) {
-          cout << visitorCount << endl;
-          if (currentVisitors > visitorCount) {
-            totalVisitors += currentVisitors - visitorCount;
-          }
-          currentVisitors = visitorCount;
-        }
+		face_cascade.detectMultiScale(gray, faces, 1.1, 3, CV_HAAR_SCALE_IMAGE, Size(80,80));
+		uint visitorCount = faces.size(); // number of visitors found
+		if (currentVisitors != visitorCount) {
+		  cout << visitorCount << endl;
+		  if (currentVisitors > visitorCount) {
+			totalVisitors += currentVisitors - visitorCount;
+		  }
+		  currentVisitors = visitorCount;
+		}
 
-	// for each faces founded
-	for(int i = 0; i < faces.size(); i++) 
-	{       
-		// crop face (pretty easy with opencv, don't you think ? 
-		Rect face_i = faces[i];
-		
-		//face = gray(face_i);  
-		//  resized face and display it
-		//cv::resize(face, face_resized, Size(im_width, im_height), 1.0, 1.0, CV_INTER_NN); //INTER_CUBIC);		
-	
-		// now, we try to predict who is it ? 
-		//char sTmp[256];		
-		//double predicted_confidence	= 0.0;
-		//int prediction				= -1;
-		//model.predict(face_resized,prediction,predicted_confidence);
-		
-		// create a rectangle around the face      
-		rectangle(gray, face_i, CV_RGB(255, 255 ,255), 1);
+		// for each faces founded
+		for(int i = 0; i < faces.size(); i++) 
+		{       
+			// crop face (pretty easy with opencv, don't you think ? 
+			Rect face_i = faces[i];			
 			
-		// if good prediction : > threshold 
-		//if (predicted_confidence>PREDICTION_SEUIL)
-		//{
-		// trace
-		//sprintf(sTmp,"+ prediction ok = %s (%d) confiance = (%d)",people[prediction].c_str(),prediction,(int)predicted_confidence);
-		//trace((string)(sTmp));
-	
-	 	// display name of the guy on the picture
-		//string box_text;
-		//if (prediction<MAX_PEOPLE)
-		//{
-		//	box_text = "Id="+people[prediction];
-		//}
-		//else
-		//{
-		//	trace("(E) prediction id incohÃ©rent");
-		//}
-		//int pos_x = std::max(face_i.tl().x - 10, 0);
-		//int pos_y = std::max(face_i.tl().y - 10, 0);			   
-		//putText(gray, box_text, Point(pos_x, pos_y), FONT_HERSHEY_PLAIN, 1.0, CV_RGB(255,255,255), 1.0);	
-	        		
-	//}
-	//else
-	//{		
-			// trace is commented to speed up
-			//sprintf(sTmp,"- prediction too low = %s (%d) confiance = (%d)",people[prediction].c_str(),prediction,(int)predicted_confidence);
-			//trace((string)(sTmp));
-	//} 
-	} // end for
+			// create a rectangle around the face      
+			rectangle(gray, face_i, CV_RGB(255, 255 ,255), 1);
+				
+		} // end for
 
 
-/////////////////////////
-// END OF FACE RECO
-/////////////////////////
+		/////////////////////////
+		// END OF FACE RECO
+		/////////////////////////
 
-    // Show the result:
-    imshow("camcvWin", gray);
-    key = (char) waitKey(1);
-    nCount++;    // count frames displayed
+		// Show the result:
+		imshow("camcvWin", gray);
+		key = (char) waitKey(1);
+		nCount++;    // count frames displayed
 
          mmal_buffer_header_mem_unlock(buffer);
       }
-      else vcos_log_error("buffer null");
-
+      else 
+	  {
+		  vcos_log_error("buffer null");
+	  }
    }
    else
    {
