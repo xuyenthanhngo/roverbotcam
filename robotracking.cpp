@@ -119,7 +119,7 @@ int readRefImages(Symbol *symbols) {
 	threshold(symbols[6].img, symbols[6].img, 100, 255, 0);
 	symbols[6].name = "Stop";
 
-	symbols[7].img = imread("arrowGo.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	symbols[7].img = imread("arrowStop.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	if (!symbols[7].img.data)
 		return -1;
 	threshold(symbols[7].img, symbols[7].img, 100, 255, 0);
@@ -360,7 +360,6 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			origImage=cvarrToMat(dstImage);
 			//cvShowImage("camcvWin", dstImage );
 			//cvWaitKey(1);
-
 		}
 		else
 		{
@@ -450,7 +449,6 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 					double minVal,maxVal,medVal;
 
-
 					minMaxLoc(new_image, &minVal, &maxVal);
 
 					medVal=(maxVal-minVal)/2;
@@ -468,9 +466,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 					for (int i = 0; i < 8; i++) {
 						//diffImg = symbols[i].img-correctedImgBin;
-
-						bitwise_xor(new_image, symbols[i].img, diffImg,
-								noArray());
+						bitwise_xor(new_image, symbols[i].img, diffImg, noArray());
 
 						diff = countNonZero(diffImg);
 						if (diff < minDiff) {
@@ -503,11 +499,11 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		//int serial = 0;
 		//threshedImage = Mat::zeros( origImage.size(), CV_8U );
 	    //threshImage( origImage, threshedImage, serial );
+		//imshow( "thresh", threshedImage );
 		//End detect ball
 		
 		// Show the result:
-		imshow("orig", origImage);
-		//imshow( "thresh", threshedImage );
+		imshow("orig", origImage);		
 		imshow( "gray", greyImg );		
 		key = (char) waitKey(1);
 		nCount++;    // count frames displayed
@@ -790,7 +786,7 @@ int main(int argc, const char **argv)
 		trace("Successful reading reference symbols\n");
 	}
 	
-	lowThreshold = 0;
+	lowThreshold = 50;
 	
 	//createTrackbar("Min Threshold:", "A", &lowThreshold, 100, CannyThreshold);
 	
