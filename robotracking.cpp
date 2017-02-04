@@ -176,6 +176,8 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 {
    MMAL_BUFFER_HEADER_T *new_buffer;
    PORT_USERDATA *pData = (PORT_USERDATA *)port->userdata;
+   // init windows and OpenCV Stuff
+   Mat origImage, threshedImage;
 
    if (pData)
    {
@@ -202,7 +204,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			cvMerge(py, pu_big, pv_big, NULL, image);
 
 			cvCvtColor(image,dstImage,CV_YCrCb2RGB);    // convert in RGB color space (slow)
-			gray=cvarrToMat(dstImage);
+			origImage=cvarrToMat(dstImage);
 			//cvShowImage("camcvWin", dstImage );
 			//cvWaitKey(1);
 
@@ -210,13 +212,13 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		else
 		{
 			// for face reco, we just keep gray channel, py
-			gray=cvarrToMat(py);
+			origImage=cvarrToMat(py);
 			//cvShowImage("camcvWin", py); // display only gray channel
 			//cvWaitKey(1);
 		}
 		
 		// Show the result:
-		imshow("camcvWin", gray);
+		imshow("orig", origImage);
 		key = (char) waitKey(1);
 		nCount++;    // count frames displayed
 
@@ -508,8 +510,10 @@ int main(int argc, const char **argv)
     // read default status
     default_status(&state);
 
-    // init windows and OpenCV Stuff
-    cvNamedWindow("camcvWin", CV_WINDOW_AUTOSIZE);
+    
+
+    cvNamedWindow("orig", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("thresh", CV_WINDOW_AUTOSIZE);
 	trace("CV_WINDOW_AUTOSIZE : ok");
     int w=state.width;
     int h=state.height;
