@@ -399,16 +399,16 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					vector<Point>::iterator vertex;
 					vertex = approxRect.begin();
 					//vertex++;
-					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 
 					Moments mu;
@@ -432,7 +432,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					Mat transmtx = getPerspectiveTransform(corners, quad_pts);
 
 					// Apply perspective transformation
-					warpPerspective(origImage, correctedImg, transmtx,
+					warpPerspective(greyImg, correctedImg, transmtx,
 							correctedImg.size());
 
 					Mat correctedImgBin;
@@ -483,7 +483,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 					if (match != -1) {
 						
-						putText(origImage, symbols[match].name, Point(320, 30), 1,
+						putText(greyImg, symbols[match].name, Point(320, 30), 1,
 								2, Scalar(0, 255, 0), 2);
 						//char sTmp[256];
 						//sprintf (sTmp, "Symbol %s\n", symbols[match].name.c_str());
