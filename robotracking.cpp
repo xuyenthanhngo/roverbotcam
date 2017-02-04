@@ -332,7 +332,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
    MMAL_BUFFER_HEADER_T *new_buffer;
    PORT_USERDATA *pData = (PORT_USERDATA *)port->userdata;
    // init windows and OpenCV Stuff
-   Mat origImage, threshedImage;
+   Mat origImage, threshedImage, greyImg;;
 
    if (pData)
    {
@@ -371,12 +371,15 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			//cvShowImage("camcvWin", py); // display only gray channel
 			//cvWaitKey(1);
 		}
+		cvtColor(origImage, greyImg, CV_RGB2GRAY);
+		
 		int serial = 0;
 		threshedImage = Mat::zeros( origImage.size(), CV_8U );
 	    threshImage( origImage, threshedImage, serial );
 		// Show the result:
 		imshow("orig", origImage);
 		imshow( "thresh", threshedImage );
+		imshow( "gray", greyImg );		
 		key = (char) waitKey(1);
 		nCount++;    // count frames displayed
 
@@ -682,6 +685,7 @@ int main(int argc, const char **argv)
 
     cvNamedWindow("orig", CV_WINDOW_AUTOSIZE);
 	cvNamedWindow("thresh", CV_WINDOW_AUTOSIZE);
+	cvNamedWindow("gray", CV_WINDOW_AUTOSIZE);
 	trace("CV_WINDOW_AUTOSIZE : ok");
     int w=state.width;
     int h=state.height;
