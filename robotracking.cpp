@@ -399,16 +399,16 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					vector<Point>::iterator vertex;
 					vertex = approxRect.begin();
 					//vertex++;
-					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(greyImg, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 
 					Moments mu;
@@ -432,7 +432,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					Mat transmtx = getPerspectiveTransform(corners, quad_pts);
 
 					// Apply perspective transformation
-					warpPerspective(greyImg, correctedImg, transmtx,
+					warpPerspective(origImage, correctedImg, transmtx,
 							correctedImg.size());
 
 					Mat correctedImgBin;
