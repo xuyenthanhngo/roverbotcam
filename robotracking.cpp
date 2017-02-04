@@ -1,20 +1,3 @@
-
-/////////////////////////////////////////////////////////////
-// Many source code lines are copied from RaspiVid.c
-// Copyright (c) 2012, Broadcom Europe Ltd
-//
-// Lines have been added by Pierre Raufast - June 2013
-// pierre.raufast@gmail.com
-// to work with OpenCV 2.3
-// visit thinkrpi.wordpress.com
-// Enjoy !
-// How to do face detection with your Raspberry Pi Camera module and OpenCV
-//
-// For a better world, read Giono's Books
-//
-/////////////////////////////////////////////////////////////
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -264,13 +247,11 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
    if (pData)
    {
-
       if (buffer->length)
       {
+        mmal_buffer_header_mem_lock(buffer);
 
-          mmal_buffer_header_mem_lock(buffer);
-
-		 //
+		//
 		// *** PR : OPEN CV Stuff here !
 		//
 		int w=pData->pstate->width;    // get image size
@@ -301,37 +282,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			//cvShowImage("camcvWin", py); // display only gray channel
 			//cvWaitKey(1);
 		}
-
-		////////////////////////////////
-		// FACE RECOGNITION START HERE
-		////////////////////////////////
-
-		face_cascade.detectMultiScale(gray, faces, 1.1, 3, CV_HAAR_SCALE_IMAGE, Size(80,80));
-		uint visitorCount = faces.size(); // number of visitors found
-		if (currentVisitors != visitorCount) {
-		  cout << visitorCount << endl;
-		  if (currentVisitors > visitorCount) {
-			totalVisitors += currentVisitors - visitorCount;
-		  }
-		  currentVisitors = visitorCount;
-		}
-
-		// for each faces founded
-		for(int i = 0; i < faces.size(); i++) 
-		{       
-			// crop face (pretty easy with opencv, don't you think ? 
-			Rect face_i = faces[i];			
-			
-			// create a rectangle around the face      
-			rectangle(gray, face_i, CV_RGB(255, 255 ,255), 1);
-				
-		} // end for
-
-
-		/////////////////////////
-		// END OF FACE RECO
-		/////////////////////////
-
+		
 		// Show the result:
 		imshow("camcvWin", gray);
 		key = (char) waitKey(1);
@@ -606,101 +557,6 @@ static void signal_handler(int signal_number)
  */
 int main(int argc, const char **argv)
 {
-
-
-/////////////////////////////////
-// BEGIN OF FACE RECO INIT
-/////////////////////////////////
-
-    //
-    // see thinkrpi.wordpress.com, articles on Magic Mirror to understand this command line and parameters
-    //
-       clog<<"start\n";
-       if ((argc != 4)&&(argc!=3)) {
-           clog << "usage: " << argv[0] << " ext_files  seuil(opt) \n files.ext histo(0/1) 5000 \n" << endl;
-           exit(1);
-       }
-
-    // set value by default for prediction treshold = minimum value to recognize
-    if (argc==3) { trace("(init) prediction treeshold = 4500.0 by default");PREDICTION_SEUIL = 4500.0;}
-    if (argc==4) PREDICTION_SEUIL = atoi(argv[3]);
-
-    // do we do a color histogram equalization ?
-    bHisto=atoi(argv[2]);
-
-
-    // init people, should be do in a config file,
-    // but I don't have time, I need to go to swimming pool
-    // with my daughters
-    // and they prefer to swimm than to see their father do a config file
-    // life is hard.
-    people[P_PIERRE]     = "Pierre";
-    people[P_NATACHA]     = "Natacha";
-    people[P_MONA]     = "Mona Lisa";
-    people[P_LISA]    = "Lisa";
-
-    // init...
-    // reset counter
-    for (int i=0;i>MAX_PEOPLE;i++)
-    {
-    nPictureById[i]=0;
-    }
-    int bFirstDisplay    =1;
-    trace("(init) People initialized");
-
-    // Get the path to your CSV
-    fn_csv = string(argv[1]);
-
-    // Note : /!\ change with your opencv path
-    //fn_haar = "/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml";
-    // change fn_harr to be quicker LBP (see article)
-    // fn_haar = "/usr/share/opencv/haarcascades/lbpcascade_frontalface.xml";
-    fn_haar = "/usr/share/opencv/lbpcascades/lbpcascade_frontalface.xml";
-    DEBUG clog<<"(OK) csv="<<fn_csv<<"\n";
-
-    // Read in the data (fails if no valid input filename is given, but you'll get an error message):
-    try {
-        read_csv(fn_csv, images, labels);
-        DEBUG clog<<"(OK) read CSV ok\n";
-    }
-    catch (cv::Exception& e)
-    {
-        cerr << "Error opening file \"" << fn_csv << "\". Reason: " << e.msg << endl;
-        exit(1);
-    }
-
-    // get heigh, witdh of 1st images--> must be the same
-    im_width = images[0].cols;
-    im_height = images[0].rows;
-    trace("(init) taille images ok");
-
-     //
-    // Create a FaceRecognizer and train it on the given images:
-    //
-
-    // this a Eigen model, but you could replace with Fisher model (in this case
-    // threshold value should be lower) (try)
-
-    //    Fisherfaces model;
-
-    // train the model with your nice collection of pictures
-    trace("(init) start train images");
-    //model.train(images, labels);
-     trace("(init) train images : ok");
-
-    // load face model
-    if (!face_cascade.load(fn_haar))
-    {
-        clog <<"(E) face cascade model not loaded :"+fn_haar+"\n";
-        return -1;
-    }
-    trace("(init) Load modele : ok");
-
-/////////////////////////////////
-// END OF FACE RECO INIT
-/////////////////////////////////
-
-
     // Our main data storage vessel..
     RASPIVID_STATE state;
 
@@ -745,7 +601,7 @@ int main(int argc, const char **argv)
        vcos_log_error("%s: Failed to create camera component", __func__);
     }
     //else if (!raspipreview_create(&state.preview_parameters))
-        else if ( (status = raspipreview_create(&state.preview_parameters)) != MMAL_SUCCESS)
+    else if ( (status = raspipreview_create(&state.preview_parameters)) != MMAL_SUCCESS)
     {
        vcos_log_error("%s: Failed to create preview component", __func__);
        destroy_camera_component(&state);
@@ -767,14 +623,13 @@ int main(int argc, const char **argv)
     // assign data to use for callback
     camera_video_port->userdata = (struct MMAL_PORT_USERDATA_T *)&callback_data;
 
-        // init timer
-      time(&timer_begin);
-
-
-       // start capture
+    // init timer
+    time(&timer_begin);
+	
+    // start capture
     if (mmal_port_parameter_set_boolean(camera_video_port, MMAL_PARAMETER_CAPTURE, 1) != MMAL_SUCCESS)
     {
-           return 0;
+        return 0;
     }
 
     // Send all the buffers to the video port
@@ -788,9 +643,9 @@ int main(int argc, const char **argv)
        if (!buffer)
            vcos_log_error("Unable to get a required buffer %d from pool queue", q);
 
-    if (mmal_port_send_buffer(camera_video_port, buffer)!= MMAL_SUCCESS)
-            vcos_log_error("Unable to send a buffer to encoder output port (%d)", q);
-    }
+		if (mmal_port_send_buffer(camera_video_port, buffer)!= MMAL_SUCCESS)
+				vcos_log_error("Unable to send a buffer to encoder output port (%d)", q);
+		}
 
 
     // Now wait until we need to stop
