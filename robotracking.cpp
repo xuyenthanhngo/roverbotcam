@@ -384,11 +384,12 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 		//GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
 		//thresholding the grayscale image to get better results
+		//cvThreshold(greyImg,greyImg,128,255,CV_THRESH_BINARY);  
 		Mat dst;
 		cvThreshold(greyImg,dst,128,255,0);  
 
 		/// Detect edges using canny
-		Canny(dst, canny_output, lowThreshold, lowThreshold * 3, 3);
+		Canny(greyImg, canny_output, lowThreshold, lowThreshold * 3, 3);
 
 		//	imshow("B",canny_output);
 		/// Find contours
@@ -511,7 +512,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		
 		// Show the result:
 		imshow("orig", origImage);		
-		imshow( "gray", greyImg );		
+		imshow( "gray", dst );		
 		key = (char) waitKey(20);
 		nCount++;    // count frames displayed
 
