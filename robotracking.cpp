@@ -44,58 +44,6 @@ extern "C" {
 using namespace cv;
 using namespace std;
 
-// for debug and trace
-#define TRACE 1
-#define DEBUG_MODE 1
-#define DEBUG if (DEBUG_MODE==1)
-
-string fn_haar;
-string fn_csv;
-int im_width;    // image width
-int im_height;    // image height
-int PREDICTION_SEUIL ;
-char key;
-
-bool shouldExit = false;
-uint totalVisitors   = 0;
-uint currentVisitors = 0;
-
-Mat gray,frame;
-///////////////////////
-
-/// Camera number to use - we only have one camera, indexed from 0.
-#define CAMERA_NUMBER 0
-
-// Standard port setting for the camera component
-#define MMAL_CAMERA_PREVIEW_PORT 0
-#define MMAL_CAMERA_VIDEO_PORT 1
-#define MMAL_CAMERA_CAPTURE_PORT 2
-
-// Video format information
-#define VIDEO_FRAME_RATE_NUM 10
-#define VIDEO_FRAME_RATE_DEN 1
-
-/// Video render needs at least 2 buffers.
-#define VIDEO_OUTPUT_BUFFERS_NUM 3
-
-// Max bitrate we allow for recording
-const int MAX_BITRATE = 30000000; // 30Mbits/s
-
-
-// variable to convert I420 frame to IplImage
-int nCount=0;
-IplImage *py, *pu, *pv, *pu_big, *pv_big, *image,* dstImage;
-
-
-int mmal_status_to_int(MMAL_STATUS_T status);
-
-
-string intToString(int number) {
-
-	std::stringstream ss;
-	ss << number;
-	return ss.str();
-}
 
 class Symbol {
 
@@ -104,8 +52,6 @@ public:
 	string name;
 
 };
-
-
 
 void sortCorners(std::vector<cv::Point2f>& corners, cv::Point2f center) {
 	std::vector<cv::Point2f> top, bot;
@@ -182,13 +128,64 @@ int readRefImages(Symbol *symbols) {
 	return 0;
 
 }
-
-
-
 int lowThreshold;
 
 void CannyThreshold(int, void*) {
 }
+
+// for debug and trace
+#define TRACE 1
+#define DEBUG_MODE 1
+#define DEBUG if (DEBUG_MODE==1)
+
+string fn_haar;
+string fn_csv;
+int im_width;    // image width
+int im_height;    // image height
+int PREDICTION_SEUIL ;
+char key;
+
+bool shouldExit = false;
+uint totalVisitors   = 0;
+uint currentVisitors = 0;
+
+Mat gray,frame;
+///////////////////////
+
+/// Camera number to use - we only have one camera, indexed from 0.
+#define CAMERA_NUMBER 0
+
+// Standard port setting for the camera component
+#define MMAL_CAMERA_PREVIEW_PORT 0
+#define MMAL_CAMERA_VIDEO_PORT 1
+#define MMAL_CAMERA_CAPTURE_PORT 2
+
+// Video format information
+#define VIDEO_FRAME_RATE_NUM 10
+#define VIDEO_FRAME_RATE_DEN 1
+
+/// Video render needs at least 2 buffers.
+#define VIDEO_OUTPUT_BUFFERS_NUM 3
+
+// Max bitrate we allow for recording
+const int MAX_BITRATE = 30000000; // 30Mbits/s
+
+
+// variable to convert I420 frame to IplImage
+int nCount=0;
+IplImage *py, *pu, *pv, *pu_big, *pv_big, *image,* dstImage;
+
+
+int mmal_status_to_int(MMAL_STATUS_T status);
+
+
+string intToString(int number) {
+
+	std::stringstream ss;
+	ss << number;
+	return ss.str();
+}
+
 
 /** Structure containing all state information for the current run
  */
@@ -332,7 +329,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
    MMAL_BUFFER_HEADER_T *new_buffer;
    PORT_USERDATA *pData = (PORT_USERDATA *)port->userdata;
    // init windows and OpenCV Stuff
-   Mat origImage, threshedImage, greyImg;;
+   Mat origImage, threshedImage, greyImg, new_image;
 
    if (pData)
    {
@@ -402,16 +399,16 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					vector<Point>::iterator vertex;
 					vertex = approxRect.begin();
 					//vertex++;
-					circle(camera, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(camera, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(camera, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 					vertex++;
-					circle(camera, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
+					circle(origImage, *vertex, 2, Scalar(0, 0, 255), -1, 8, 0);
 					corners.push_back(*vertex);
 
 					Moments mu;
