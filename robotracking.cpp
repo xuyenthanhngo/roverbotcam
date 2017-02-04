@@ -152,6 +152,8 @@ uint currentVisitors = 0;
 Mat gray,frame;
 ///////////////////////
 
+Symbol symbols[10];
+
 /// Camera number to use - we only have one camera, indexed from 0.
 #define CAMERA_NUMBER 0
 
@@ -779,7 +781,7 @@ static void signal_handler(int signal_number)
  */
 int main(int argc, const char **argv)
 {
-	Symbol symbols[10];
+	
 	if (readRefImages(symbols) == -1) {
 		trace("Error reading reference symbols\n");
 		return -1;
