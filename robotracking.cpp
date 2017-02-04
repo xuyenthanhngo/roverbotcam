@@ -7,6 +7,8 @@
 #include <cv.h>
 #include <highgui.h>
 #include "time.h"
+#include "stdafx.h"
+//#include <cv.h>
 
 extern "C" {
     #include "bcm_host.h"
