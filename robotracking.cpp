@@ -382,17 +382,17 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		vector<vector<Point> > contours;
 		vector<Vec4i> hierarchy;
 
-		//GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
+		GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
 		//thresholding the grayscale image to get better results
 		//cvThreshold(greyImg,greyImg,128,255,CV_THRESH_BINARY);  
-		Mat dst;
+		/*Mat dst;
 		double threshold_type = 3;
 		int threshold_value = 0;
-int threshold_type = 3;;
-int const max_value = 255;
-int const max_type = 4;
-int const max_BINARY_value = 255;
-		cvThreshold(greyImg,dst,threshold_value, max_BINARY_value,threshold_type);  
+		int threshold_type = 3;;
+		int const max_value = 255;
+		int const max_type = 4;
+		int const max_BINARY_value = 255;
+		cvThreshold(greyImg,dst,threshold_value, max_BINARY_value,threshold_type);  */
 
 		/// Detect edges using canny
 		Canny(greyImg, canny_output, lowThreshold, lowThreshold * 3, 3);
