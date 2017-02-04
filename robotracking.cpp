@@ -386,7 +386,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		//thresholding the grayscale image to get better results
 		//cvThreshold(greyImg,greyImg,128,255,CV_THRESH_BINARY);  
 		Mat dst;
-		int threshold_type = 3;
+		double threshold_type = 3;
 		cvThreshold(greyImg,dst,128,255,threshold_type);  
 
 		/// Detect edges using canny
