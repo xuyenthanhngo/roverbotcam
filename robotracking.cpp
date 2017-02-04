@@ -371,9 +371,9 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			//cvShowImage("camcvWin", py); // display only gray channel
 			//cvWaitKey(1);
 		}
-		//int serial = 0;
-		//threshedImage = Mat::zeros( origImage.size(), CV_8U );
-	    //threshImage( origImage, threshedImage, serial );
+		int serial = 0;
+		threshedImage = Mat::zeros( origImage.size(), CV_8U );
+	    threshImage( origImage, threshedImage, serial );
 		// Show the result:
 		imshow("orig", origImage);
 		imshow( "thresh", threshedImage );
