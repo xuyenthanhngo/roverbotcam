@@ -371,7 +371,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		cvtColor(origImage, greyImg, CV_RGB2GRAY);
 		
 		//Detect ball
-		//int serial = 0;
+		int serial = 0;
 		threshedImage = Mat::zeros( origImage.size(), CV_8U );
 	    threshImage( origImage, threshedImage, serial );
 		imshow( "thresh", threshedImage );
