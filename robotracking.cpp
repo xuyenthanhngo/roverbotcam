@@ -223,7 +223,7 @@ static void default_status(RASPIVID_STATE *state)
    state->bitrate     = 17000000; // This is a decent default bitrate for 1080p
    state->framerate     = VIDEO_FRAME_RATE_NUM;
    state->immutableInput     = 1;
-   state->graymode     = 1;    //gray by default, much faster than color (0), mandatory for face reco
+   state->graymode     = 0;    //gray by default, much faster than color (0), mandatory for face reco
 
    // Setup preview window defaults
    raspipreview_set_defaults(&state->preview_parameters);
