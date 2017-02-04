@@ -790,7 +790,7 @@ int main(int argc, const char **argv)
 		trace("Successful reading reference symbols\n");
 	}
 	
-	lowThreshold = 50;
+	lowThreshold = 0;
 	
 	//createTrackbar("Min Threshold:", "A", &lowThreshold, 100, CannyThreshold);
 	
