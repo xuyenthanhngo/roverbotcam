@@ -296,7 +296,7 @@ void threshImage( Mat input, Mat output, int serial ) {
 		}
 		if( xDiff != 2 || yDiff != 20 ) {
 			sendBuf = xDiff + yDiff;
-			write( serial, &sendBuf, 1 );
+			//write( serial, &sendBuf, 1 );
 		}
 		rectangle(
 			input,
