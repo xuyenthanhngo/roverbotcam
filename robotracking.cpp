@@ -164,6 +164,57 @@ static void default_status(RASPIVID_STATE *state)
    raspicamcontrol_set_defaults(&state->camera_parameters);
 }
 
+void threshImage( Mat input, Mat output, int serial ) {
+	Mat hsvImg = Mat::zeros( input.size(), input.type() );
+	vector<Vec3f> circles;
+
+	blur( input, hsvImg, Size( 9, 9 ) );
+	cvtColor( hsvImg, hsvImg, CV_BGR2HSV );
+	inRange( hsvImg, Scalar( 70, 30, 30 ), Scalar( 100, 255, 255 ), output );
+
+	HoughCircles( output, circles, CV_HOUGH_GRADIENT, 2, output.rows/4, 100, 40, 20, 200);
+	Size imgSize = input.size();
+	Point imgCenter( imgSize.width/2, imgSize.height/2 );
+	for( size_t i = 0; i < circles.size() && i < 1; i++ ) {
+		Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+		int radius = cvRound(circles[i][2]);
+		int xDiff = imgCenter.x - center.x;
+		int yDiff = imgCenter.y - center.y;
+		char sendBuf;
+		if( abs( yDiff ) > radius ) {
+			yDiff = yDiff > 0 ? 30 : 10;
+		} else {
+			yDiff = 20;
+		}
+		if( abs( xDiff ) > radius ) {
+			xDiff = xDiff > 0 ? 3 : 1;
+		} else {
+			xDiff = 2;
+		}
+		if( xDiff != 2 || yDiff != 20 ) {
+			sendBuf = xDiff + yDiff;
+			write( serial, &sendBuf, 1 );
+		}
+		rectangle(
+			input,
+			Point(
+				circles[i][0] - radius,
+				circles[i][1] - radius
+			),
+			Point(
+				circles[i][0] + radius,
+				circles[i][1] + radius
+			),
+			Scalar( 0, 255, 0 ),
+			3,
+			8,
+			0
+		);
+		line( input, imgCenter, center, Scalar( 255, 0, 0 ), 3, 8, 0 );
+
+	}
+}
+
 
 
 /**
@@ -216,9 +267,11 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 			//cvShowImage("camcvWin", py); // display only gray channel
 			//cvWaitKey(1);
 		}
-		
+		threshedImage = Mat::zeros( origImage.size(), CV_8U );
+	    threshImage( origImage, threshedImage, serial );
 		// Show the result:
 		imshow("orig", origImage);
+		imshow( "thresh", threshedImage );
 		key = (char) waitKey(1);
 		nCount++;    // count frames displayed
 
