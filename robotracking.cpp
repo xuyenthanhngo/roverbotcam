@@ -456,6 +456,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					threshold(new_image, new_image, medVal, 255, 0);
 
 					imshow("C", new_image);
+					trace("new_image");
 
 					Mat diffImg;
 
