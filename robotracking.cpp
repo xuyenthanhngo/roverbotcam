@@ -461,7 +461,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					Mat diffImg;
 
 					int match, minDiff, diff;
-					minDiff = 12000 * 2;
+					minDiff = 12000;
 					match = -1;
 
 					for (int i = 0; i < 8; i++) {
