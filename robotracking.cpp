@@ -150,8 +150,10 @@ static void default_status(RASPIVID_STATE *state)
 
    // Now set anything non-zero
    state->timeout     = 65000;     // capture time : here 65 s
-   state->width     = 320;      // use a multiple of 320 (640, 1280)
-   state->height     = 240;    // use a multiple of 240 (480, 960)
+   //state->width     = 320;      // use a multiple of 320 (640, 1280)
+   //state->height     = 240;    // use a multiple of 240 (480, 960)
+   state->width     = 640;      // use a multiple of 320 (640, 1280)
+   state->height     = 480;    // use a multiple of 240 (480, 960)
    state->bitrate     = 17000000; // This is a decent default bitrate for 1080p
    state->framerate     = VIDEO_FRAME_RATE_NUM;
    state->immutableInput     = 1;
@@ -170,9 +172,10 @@ void threshImage( Mat input, Mat output, int serial ) {
 
 	blur( input, hsvImg, Size( 9, 9 ) );
 	cvtColor( hsvImg, hsvImg, CV_BGR2HSV );
+	//inRange( hsvImg, Scalar( 70, 30, 30 ), Scalar( 100, 255, 255 ), output );
 	inRange( hsvImg, Scalar( 70, 30, 30 ), Scalar( 100, 255, 255 ), output );
 
-	HoughCircles( output, circles, CV_HOUGH_GRADIENT, 2, output.rows/4, 100, 40, 20, 200);
+	HoughCircles( output, circles, CV_HOUGH_GRADIENT, 2, output.rows/4, 100, 40, 10, 400);
 	Size imgSize = input.size();
 	Point imgCenter( imgSize.width/2, imgSize.height/2 );
 	for( size_t i = 0; i < circles.size() && i < 1; i++ ) {
