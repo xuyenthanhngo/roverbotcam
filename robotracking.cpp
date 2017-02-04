@@ -456,7 +456,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					threshold(new_image, new_image, medVal, 255, 0);
 
 					imshow("C", new_image);
-					trace("new_image");
+					//trace("new_image");
 
 					Mat diffImg;
 
@@ -507,7 +507,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		// Show the result:
 		imshow("orig", origImage);		
 		imshow( "gray", greyImg );		
-		key = (char) waitKey(1);
+		key = (char) waitKey(20);
 		nCount++;    // count frames displayed
 
          mmal_buffer_header_mem_unlock(buffer);
