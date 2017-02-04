@@ -604,7 +604,7 @@ static void signal_handler(int signal_number)
 /**
  * main
  */
-int main23(int argc, const char **argv)
+int main(int argc, const char **argv)
 {
 
 
