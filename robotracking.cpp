@@ -780,8 +780,7 @@ static void signal_handler(int signal_number)
  * main
  */
 int main(int argc, const char **argv)
-{
-	
+{	
 	if (readRefImages(symbols) == -1) {
 		trace("Error reading reference symbols\n");
 		return -1;
@@ -791,7 +790,9 @@ int main(int argc, const char **argv)
 		trace("Successful reading reference symbols\n");
 	}
 	
-	createTrackbar("Min Threshold:", "A", &lowThreshold, 100, CannyThreshold);
+	lowThreshold = 100;
+	
+	//createTrackbar("Min Threshold:", "A", &lowThreshold, 100, CannyThreshold);
 	
     // Our main data storage vessel..
     RASPIVID_STATE state;
