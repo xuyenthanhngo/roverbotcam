@@ -77,7 +77,7 @@ void sortCorners(std::vector<cv::Point2f>& corners, cv::Point2f center) {
 
 int readRefImages(Symbol *symbols) {
 
-	symbols[0].img = imread("arrowGo.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	symbols[0].img = imread("arrowL.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	if (!symbols[0].img.data)
 		return -1;
 	threshold(symbols[0].img, symbols[0].img, 100, 255, 0);
@@ -119,7 +119,7 @@ int readRefImages(Symbol *symbols) {
 	threshold(symbols[6].img, symbols[6].img, 100, 255, 0);
 	symbols[6].name = "Stop";
 
-	symbols[7].img = imread("arrowL.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	symbols[7].img = imread("arrowGo.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	if (!symbols[7].img.data)
 		return -1;
 	threshold(symbols[7].img, symbols[7].img, 100, 255, 0);
@@ -461,7 +461,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					Mat diffImg;
 
 					int match, minDiff, diff;
-					minDiff = 12000;
+					minDiff = 2000;
 					match = -1;
 
 					for (int i = 0; i < 8; i++) {
