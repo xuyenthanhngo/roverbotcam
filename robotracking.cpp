@@ -377,7 +377,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 		//GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
 		//thresholding the grayscale image to get better results
-		cvThreshold(greyImg,greyImg,128,255,CV_THRESH_BINARY);  
+		cvThreshold(greyImg,greyImg,128,255,cv.CV_THRESH_BINARY | cv.CV_THRESH_OTSU);  
 
 		/// Detect edges using canny
 		Canny(greyImg, canny_output, lowThreshold, lowThreshold * 3, 3);
