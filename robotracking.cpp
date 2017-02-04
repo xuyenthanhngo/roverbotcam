@@ -314,7 +314,6 @@ void threshImage( Mat input, Mat output, int serial ) {
 			0
 		);
 		line( input, imgCenter, center, Scalar( 255, 0, 0 ), 3, 8, 0 );
-
 	}
 }
 
@@ -490,9 +489,9 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					if (match != -1) {
 						putText(origImage, symbols[match].name, Point(320, 30), 1,
 								2, Scalar(0, 255, 0), 2);
-						trace("Symbol \n");
-						trace(symbols[match].name);
-						trace("\n");
+						char sTmp[256];
+						sprintf (sTmp, "Symbol %s\n", symbols[match].name);
+						trace((string)(sTmp));
 					}
 					//break;
 
@@ -505,7 +504,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		//Detect ball
 		int serial = 0;
 		threshedImage = Mat::zeros( origImage.size(), CV_8U );
-	    threshImage( origImage, threshedImage, serial );
+	    //threshImage( origImage, threshedImage, serial );
 		//End detect ball
 		
 		// Show the result:
