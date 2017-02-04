@@ -649,6 +649,16 @@ static void signal_handler(int signal_number)
  */
 int main(int argc, const char **argv)
 {
+	Symbol symbols[10];
+	if (readRefImages(symbols) == -1) {
+		trace("Error reading reference symbols\n");
+		return -1;
+	}
+	else
+	{
+		trace("Successful reading reference symbols\n");
+	}
+	
     // Our main data storage vessel..
     RASPIVID_STATE state;
 
