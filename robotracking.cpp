@@ -490,6 +490,9 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					if (match != -1) {
 						putText(origImage, symbols[match].name, Point(320, 30), 1,
 								2, Scalar(0, 255, 0), 2);
+						trace("Symbol \n");
+						trace(symbols[match].name);
+						trace("\n");
 					}
 					//break;
 
