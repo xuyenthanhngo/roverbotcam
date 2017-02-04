@@ -507,7 +507,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		
 		// Show the result:
 		imshow("orig", origImage);
-		imshow( "thresh", threshedImage );
+		//imshow( "thresh", threshedImage );
 		imshow( "gray", greyImg );		
 		key = (char) waitKey(1);
 		nCount++;    // count frames displayed
