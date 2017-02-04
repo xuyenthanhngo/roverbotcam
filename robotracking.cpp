@@ -480,7 +480,6 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 
 						if (i == 0) {
 							//	imshow("B",diffImg);
-
 						}
 					}
 
@@ -489,12 +488,11 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					if (match != -1) {
 						putText(origImage, symbols[match].name, Point(320, 30), 1,
 								2, Scalar(0, 255, 0), 2);
-						char sTmp[256];
-						sprintf (sTmp, "Symbol %s\n", symbols[match].name.c_str());
-						trace((string)(sTmp));
+						//char sTmp[256];
+						//sprintf (sTmp, "Symbol %s\n", symbols[match].name.c_str());
+						//trace((string)(sTmp));
 					}
 					//break;
-
 				}
 
 			}
