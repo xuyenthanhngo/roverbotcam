@@ -44,22 +44,11 @@ extern "C" {
 using namespace cv;
 using namespace std;
 
-// some constants to manage nb of people to learn+ id of people
-#define MAX_PEOPLE     4
-#define P_PIERRE    0
-#define P_NATACHA    1
-#define P_LISA    3
-#define P_MONA    2
-
 // for debug and trace
 #define TRACE 1
 #define DEBUG_MODE 1
 #define DEBUG if (DEBUG_MODE==1)
 
-CascadeClassifier face_cascade;
-CvPoint Myeye_left;
-CvPoint Myeye_right;
-//Eigenfaces model;
 string fn_haar;
 string fn_csv;
 int im_width;    // image width
@@ -71,21 +60,7 @@ bool shouldExit = false;
 uint totalVisitors   = 0;
 uint currentVisitors = 0;
 
-Mat gray,frame,face,face_resized;
-vector<Mat> images;
-vector<int> labels;
-
-// name of people
-string  people[MAX_PEOPLE];
-
-// nb of times RPI talks to one guy
-int nbSpeak[MAX_PEOPLE];
-
-int bHisto;
-vector< Rect_<int> > faces;
-
-// nb of picture learnt by people
-int nPictureById[MAX_PEOPLE];
+Mat gray,frame;
 ///////////////////////
 
 /// Camera number to use - we only have one camera, indexed from 0.
@@ -158,49 +133,6 @@ void trace(string s)
         clog<<s<<"\n";
     }
 }
-/////////////////////////////////////////////////
-//
-// read csv files.
-// Fully copied from Philipp Wagner works
-// http://docs.opencv.org/trunk/modules/contrib/doc/facerec/tutorial/facerec_video_recognition.html
-//
-////////////////////////////////////////////////
-static void read_csv(const string& filename, vector<Mat>& images, vector<int>& labels, char separator = ';') {
-    std::ifstream file(filename.c_str(), ifstream::in);
-    if (!file) {
-        string error_message = "(E) No valid input file was given, please check the given filename.";
-        CV_Error(CV_StsBadArg, error_message);
-    }
-    string line, path, classlabel;
-    int nLine=0;
-    while (getline(file, line)) {
-        stringstream liness(line);
-        getline(liness, path, separator);
-        getline(liness, classlabel);
-        if(!path.empty() && !classlabel.empty())
-        {
-            // read the file and build the picture collection
-            images.push_back(imread(path, 0));
-            labels.push_back(atoi(classlabel.c_str()));
-            nPictureById[atoi(classlabel.c_str())]++;
-            nLine++;
-        }
-    }
-
-    // write number of picture by people
-    // did you notice? I'm not familiar with string classe :-)
-    // I prefer my old good char* ...
-    // (what a pity)
-    char sTmp[128];
-    sprintf(sTmp,"(init) %d pictures read to train",nLine);
-    trace((string)(sTmp));
-    for (int j=0;j<MAX_PEOPLE;j++)
-    {
-    sprintf(sTmp,"(init) %d pictures of %s (%d) read to train",nPictureById[j],people[j].c_str(),j);
-            trace((string)(sTmp));
-    }
-}
-
 
 /////////////////////////////////////////
 
