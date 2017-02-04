@@ -370,12 +370,19 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		}
 		cvtColor(origImage, greyImg, CV_RGB2GRAY);
 		
+		//Detect ball
+		//int serial = 0;
+		threshedImage = Mat::zeros( origImage.size(), CV_8U );
+	    threshImage( origImage, threshedImage, serial );
+		imshow( "thresh", threshedImage );
+		//End detect ball
+		
 		//Detect symbols
 		Mat canny_output;
 		vector<vector<Point> > contours;
 		vector<Vec4i> hierarchy;
 
-		//GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
+		GaussianBlur(greyImg, greyImg, Size(9, 9), 2, 2);
 		//thresholding the grayscale image to get better results
 		//cvThreshold(greyImg,greyImg,128,255,CV_THRESH_BINARY);  
 
@@ -499,12 +506,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		}		
 		//End detect symbols
 		
-		//Detect ball
-		//int serial = 0;
-		//threshedImage = Mat::zeros( origImage.size(), CV_8U );
-	    //threshImage( origImage, threshedImage, serial );
-		//imshow( "thresh", threshedImage );
-		//End detect ball
+		
 		
 		// Show the result:
 		imshow("orig", origImage);		
