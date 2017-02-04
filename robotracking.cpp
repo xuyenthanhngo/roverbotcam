@@ -432,7 +432,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 					Mat transmtx = getPerspectiveTransform(corners, quad_pts);
 
 					// Apply perspective transformation
-					warpPerspective(camera, correctedImg, transmtx,
+					warpPerspective(origImage, correctedImg, transmtx,
 							correctedImg.size());
 
 					Mat correctedImgBin;
