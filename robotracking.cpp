@@ -518,7 +518,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		
 		// Show the result:
 		imshow("orig", origImage);		
-		imshow( "gray", dst );		
+		imshow( "gray", greyImg );		
 		key = (char) waitKey(20);
 		nCount++;    // count frames displayed
 
