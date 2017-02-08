@@ -398,7 +398,7 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		/// Detect edges using canny
 		Canny(detected_edges, canny_output, lowThreshold, lowThreshold * 3, 3);
 
-		//	imshow("B",canny_output);
+		imshow("B",canny_output);
 		/// Find contours
 		findContours(canny_output, contours, hierarchy, CV_RETR_TREE,
 				CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
