@@ -524,12 +524,16 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		if(key == 'c')
 		{
 			lowThreshold += 2;			
-			trace("lowThreshold: %d \n", lowThreshold);
+			char sTmp[128];
+			sprintf (sTmp, "lowThreshold %d\n", lowThreshold);
+			trace((string)(sTmp));
 		}
 		else if(key == 'v')
 		{
 			lowThreshold -= 2;
-			trace("lowThreshold: %d \n", lowThreshold);
+			char sTmp[128];
+			sprintf (sTmp, "lowThreshold %d\n", lowThreshold);
+			trace((string)(sTmp));			
 		}
 
 		nCount++;    // count frames displayed
