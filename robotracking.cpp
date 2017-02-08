@@ -520,6 +520,20 @@ static void video_buffer_callback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffe
 		imshow("orig", origImage);		
 		imshow( "gray", greyImg );		
 		key = (char) waitKey(20);
+		
+		if(key == '+')
+		{
+			lowThreshold += 2;
+			trace(lowThreshold);
+			trace("lowThreshold\n");
+		}
+		if(key == '-')
+		{
+			lowThreshold -= 2;
+			trace(lowThreshold);
+			trace("lowThreshold\n");
+		}
+
 		nCount++;    // count frames displayed
 
          mmal_buffer_header_mem_unlock(buffer);
@@ -800,7 +814,7 @@ int main(int argc, const char **argv)
 		trace("Successful reading reference symbols\n");
 	}
 	
-	lowThreshold = 50;
+	lowThreshold = 0;
 	
 	//createTrackbar("Min Threshold:", "A", &lowThreshold, 100, CannyThreshold);
 	
